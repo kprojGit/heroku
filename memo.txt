@@ -1,0 +1,289 @@
+
+
+
+
+
+
+LINEでアプリを配信する
+・herokuを使ってデプロイする
+→herokuの導入自体はできそうだがこの後工程でhttps化が必要
+
+・wsgiとflaskを使ってデプロイする
+→導入時にルーターのポートを開放する必要がある
+
+
+→いずれもDDNSをhttps化する必要がある
+→ルーターのポートを開放する必要がある
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Herokuの概要
+
+
+クラウドサービスは大きくSaaS、PaaS、IaaSの3種類に大別される、Herokuはこのうち、PaaS（Platform as a Service）に分類
+
+
+PaaSとは、開発したWEBアプリケーションを開発・実行するための基盤（プラットフォーム）を提供するサービスを指す。
+
+PaaSを利用することで、それまで必要だったサーバーの購入やOS、DB、WEBサーバなどのミドルウェア類のセットアップが不要となり、
+開発者はインターネット越しでPaaSを操作するだけで、手軽にWEBアプリケーションのホスティングができる。
+また画面やコマンドライン上でスケールアップ／アウトを手軽に行うことができ、この点もWEBアプリケーションの公開のハードルを下げた一因
+PaaSが普及したことで、開発者は本質的な開発作業に集中することが可能になりま
+
+
+
+Herokuの特徴
+
+
+多様な言語・FWをサポートしている
+Ruby（Rails含む）
+PHP
+Java
+Node.js
+Python
+Go
+Scala（Play含む）
+Clojure
+
+上記以外にも、buildpackと呼ばれる機能を利用することで、希望の言語・FWをHeroku上で利用することもできる
+
+
+
+
+Gitコマンドで操作できる
+
+Herokuではアプリケーションをデプロイする操作として、エンジニアならお馴染みのGitコマンドを利用する。
+Herokuをリモートリポジトリとしてgit pushするイメージで、手軽にアプリケーションを公開することができる。
+
+
+
+
+
+拡張機能
+
+SendGrid：メール配信
+PaperTrail：ログ管理
+New Relic APM：監視
+
+
+
+
+
+
+Gitとは
+ソースコードをはじめとしたファイルの変更履歴（バージョン）を管理するための「分散型」のバージョン管理システムがGit
+
+バージョン管理システムは大きく「集中型」と「分散型」に分けられる
+「集中型」のバージョン管理システムでは、特定の場所にあるリポジトリへの接続が必須となるが、
+「分散型」のバージョン管理システムでは個々人のマシン上にリポジトリを作成して開発を行うことができ、現在のチーム開発における主流となっています。
+
+Gitの具体的な使い方は、後ほど紹介していきます。
+
+リポジトリとは
+バージョン管理によって管理されるファイルと履歴情報を保管する領域を、リポジトリと呼び
+リポジトリの配下でファイルやディレクトリを操作することで、私たちはバージョン管理を行うことができます。
+分散型のバージョン管理システムであるGitでは、まず個々人のマシン上にあるリポジトリ上で作業を実施後、
+作業内容をネットワーク先のサーバー上などにあるリポジトリに集約する流れで開発を進める
+この個々人のリポジトリを「ローカルリポジトリ」、集約先となるリポジトリを「リモートリポジトリ」と呼ぶ
+
+
+GitとGitHubの超基本的な使い方
+
+Gitのインストール
+Gitの初期設定
+GitHubのアカウントを作成
+リモートリポジトリを作成する
+ローカルリポジトリを作成する
+ローカルリポジトリにコミットする
+リモートリポジトリにプッシュする
+
+
+Gitのインストール
+
+インストールが完了したら、Git Bashを起動
+Git Bashとは、Windows上でGitのコマンドを操作するためのツール
+Git Bash上で、以下のコマンドを入力してGitのバージョン情報が表示されることを確認
+
+$ git --version
+
+→git version 2.33.0.windows.2
+
+
+初期設定
+
+ユーザ名
+git config --global user.name kproj
+
+メールアドレス
+
+git config --global user.email k.yamamoto99@gmail.com
+
+
+上記のユーザ名とメールアドレスが登録されていることを確認
+
+git config --list
+
+
+
+GitHubのアカウント作成
+
+作成したアカウント
+
+
+メールアドレス　k.yamamoto99@gmail.com
+パス　t1265883!
+ユーザー名　kprojGit
+
+
+
+
+リモートリポジトリを作成する
+GitHubにアクセスし、リモートリポジトリを作成
+
+名前　Test
+
+
+
+
+ローカルリポジトリを作成する
+
+heroku　というディレクトリを作成
+git initコマンドを入力することで、rakusディレクトリをリポジトリとして初期化
+コマンドはディレクトリ上で実施する必要がある
+
+cd /c/Users/10T2095K/Desktop/Python/heroku
+git init
+
+
+
+
+ローカルリポジトリにコミットする
+ファイルの追加・変更をローカルリポジトリに反映する
+
+「index.html」というファイルを作成し
+以下のコマンドを入力し、インデックスへ「index.html」を追加
+インデックスとは、コミット前に変更内容を一時的に保存する領域を指し、インデックスに追加されたファイルのみがコミットの対象となる
+
+git add index.html
+
+インデックスへ追加したファイルをコミット
+以下のコマンドを入力すると、インデックスに存在するファイルがローカルリポジトリへ追加される
+
+git commit -m "[Add] index"
+
+結果
+[master (root-commit) 2c998be] [Add] index
+ 1 file changed, 16 insertions(+)
+ create mode 100644 index.html
+
+
+コミットメッセージを含めた変更履歴（ログ）は、以下のgit logコマンドを入力することで以下のように確認できる
+$ git log
+commit 2c998be376421168415e02a531a99df2e7154085 (HEAD -> master)
+Author: kproj <k.yamamoto99@gmail.com>
+Date:   Tue Oct 5 02:55:23 2021 +0900
+
+    [Add] index
+
+
+
+リモートリポジトリにプッシュする
+
+ローカルリポジトリの変更をGitHub上のリモートリポジトリに反映するプッシュ（push）する
+ローカルリポジトリとリモートリポジトリを紐づけをするために、ローカルリポジトリ（ディレクトリ）配下で以下のコマンドを入力
+
+git remote add origin https://github.com/kprojGit/heroku.git
+
+→リモートリポジトリの情報がローカルリポジトリに登録される
+
+
+次にローカルリポジトリの変更内容をリモートリポジトリに反映させるため、以下のコマンドを入力してプッシュを行う
+GitHubのユーザ名とパスワードを求められますので、アカウント登録時に設定した内容を入力してください。
+
+git push origin master
+
+
+
+
+
+
+
+
+Heroku CLIをインストール
+
+Herokuをコマンドライン上から操作するためのツールをインストールする
+後続のデプロイ作業には、このツールが必要となる
+
+CLI上でHerokuにログイン
+$ heroku login -i
+heroku: Enter your login credentials
+Email: k.yama...
+Password: t1265883!
+
+→　Logged in as メールアドレス
+
+
+
+
+デプロイを行う
+GitHub上のサンプルプログラムを使い、Heroku上にアプリケーションをデプロイする
+
+ディレクトリへ移動後、次にデプロイ用のアプリケーションをGitHubより取得
+git cloneを使い、任意のリポジトリ（今回はHerokuのサンプルアプリケーションを使います）からクローンを行う
+
+
+※実際の開発ではここが開発対象のリポジトリとなり、ローカルリポジトリを最新化しておく必要がある
+$ git clone 'https://github.com/heroku/java-getting-started.git'
+
+結果
+Cloning into 'java-getting-started'...
+remote: Enumerating objects: 452, done.
+remote: Counting objects: 100% (20/20), done.
+remote: Compressing objects: 100% (20/20), done.
+remote: Total 452 (delta 11), reused 0 (delta 0), pack-reused 432
+Receiving objects: 100% (452/452), 197.35 KiB | 9.40 MiB/s, done.
+Resolving deltas: 100% (176/176), done.
+
+
+
+
+
+デプロイ実施
+Heroku上にデプロイを行うためのアプリケーション作成を実施
+まずはクローンしたアプリケーション配下へ移動
+
+$ cd java-getting-started/
+
+
+次にheroku createコマンドを入力すると、デプロイ用のアプリケーションが作成される
+この際、コマンドライン上に表示されるURLを控える
+
+結果
+ »   Warning: heroku update available from 7.53.0 to 7.59.0.
+Creating app... done, dry-ravine-20805
+https://dry-ravine-20805.herokuapp.com/ | https://git.heroku.com/dry-ravine-20805.git
+
+
+最後にgit push heroku masterを入力すると、Heroku上へのデプロイが行われる
+
+
+
+
+
+
+
+
